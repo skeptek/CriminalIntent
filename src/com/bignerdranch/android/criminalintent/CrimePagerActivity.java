@@ -21,6 +21,7 @@ public class CrimePagerActivity extends FragmentActivity {
 		mViewPager.setId(R.id.viewPager);
 		setContentView(mViewPager);
 		//hi
+		//hi again
 		mCrimes = CrimeLab.get(this).getCrimes();
 		
 		FragmentManager fm = getSupportFragmentManager();
