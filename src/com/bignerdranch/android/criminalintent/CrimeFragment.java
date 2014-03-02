@@ -2,7 +2,9 @@ package com.bignerdranch.android.criminalintent;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 import android.annotation.TargetApi;
@@ -28,11 +30,14 @@ public class CrimeFragment extends Fragment {
 	private Crime mCrime;
 	private EditText mTitleField;
 	private Button mDateButton;
+	private Button mTimeButton;
 	private CheckBox mSolvedCheckBox;
 	public static final String EXTRA_CRIME_ID = 
 			"com.bignerdranch.android.criminalintent.crime_id";
 	public static final String DIALOG_DATE = "date";
 	private static final int REQUEST_DATE = 0;
+	private static final int REQUEST_TIME = 1;
+	public static final String DIALOG_TIME = "time";
 	
 	public static CrimeFragment newInstance(UUID crimeId) {
 		Bundle args = new Bundle();
@@ -95,6 +100,22 @@ public class CrimeFragment extends Fragment {
 			}
 		});
 		
+		this.mTimeButton = (Button)v.findViewById(R.id.crime_time);
+		this.mTimeButton.setText(DateFormat.getTimeInstance().format(mCrime.getDate()));
+		this.mTimeButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				FragmentManager fm = getActivity()
+						.getSupportFragmentManager();
+				
+				TimePickerFragment dialog = TimePickerFragment
+						.newInstance(mCrime.getDate());
+				dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
+				dialog.show(fm, DIALOG_TIME);
+			}
+		});
+		
 		mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
 		mSolvedCheckBox.setChecked(mCrime.isSolved());
 		mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -112,8 +133,30 @@ public class CrimeFragment extends Fragment {
 		if (resultCode != Activity.RESULT_OK) return;
 		if (requestCode == REQUEST_DATE) {
 			Date date = (Date)data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-			mCrime.setDate(date);
-			updateDate();
+			//mCrime.setDate(date);
+			//updateDate();
+			Calendar newCrimeCalendar = new GregorianCalendar();
+			newCrimeCalendar.setTime(date);
+			
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(mCrime.getDate());
+			calendar.set(Calendar.DAY_OF_MONTH, newCrimeCalendar.get(Calendar.DAY_OF_MONTH));
+			calendar.set(Calendar.MONTH, newCrimeCalendar.get(Calendar.MONTH));
+			calendar.set(Calendar.YEAR, newCrimeCalendar.get(Calendar.YEAR));
+			mCrime.setDate(calendar.getTime());
+			mDateButton.setText(DateFormat.getDateInstance().format(mCrime.getDate()));
+		}
+		if (requestCode == REQUEST_TIME) {
+			Date date = (Date)data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+			Calendar newCrimeCalendar = new GregorianCalendar();
+			newCrimeCalendar.setTime(date);
+			
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(mCrime.getDate());
+			calendar.set(Calendar.HOUR_OF_DAY, newCrimeCalendar.get(Calendar.HOUR_OF_DAY));
+			calendar.set(Calendar.MINUTE, newCrimeCalendar.get(Calendar.MINUTE));
+			mCrime.setDate(calendar.getTime());
+			mTimeButton.setText(DateFormat.getTimeInstance().format(mCrime.getDate()));
 		}
 	}
 	
