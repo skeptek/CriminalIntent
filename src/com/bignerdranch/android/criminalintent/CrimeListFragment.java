@@ -125,13 +125,15 @@ public class CrimeListFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View v = super.onCreateView(inflater, container, savedInstanceState);
+		//View v = super.onCreateView(inflater, container, savedInstanceState);
+		View v = inflater.inflate(R.layout.list_fragment_crime, container, false);
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			if (mSubtitleVisible) {
 				getActivity().getActionBar().setSubtitle(R.string.subtitle);
 			}
 		}
+		
 		return v;
 	}
 	
