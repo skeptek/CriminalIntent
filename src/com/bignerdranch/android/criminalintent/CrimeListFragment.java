@@ -127,6 +127,8 @@ public class CrimeListFragment extends ListFragment {
 		
 		//View v = super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.list_fragment_crime, container, false);
+		//ListView view = (ListView)v.findViewById(android.R.id.list);
+	    //view.setEmptyView(v.findViewById(android.R.id.empty));
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			if (mSubtitleVisible) {
