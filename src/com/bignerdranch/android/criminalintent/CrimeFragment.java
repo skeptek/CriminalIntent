@@ -142,6 +142,13 @@ public class CrimeFragment extends Fragment {
 				return super.onOptionsItemSelected(item);
 		}
 	}
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		CrimeLab.get(getActivity()).saveCrimes();
+	}
 	
 	
 
