@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 public class CrimeLab {
@@ -37,6 +38,14 @@ public class CrimeLab {
 	
 	public void addCrime(Crime c) {
 		mCrimes.add(c);
+	}
+	
+	public boolean isExternalStorageWritable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	        return true;
+	    }
+	    return false;
 	}
 	
 	public boolean saveCrimes() {

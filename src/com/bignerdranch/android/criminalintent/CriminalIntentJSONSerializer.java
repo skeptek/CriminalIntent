@@ -1,12 +1,15 @@
 package com.bignerdranch.android.criminalintent;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 
@@ -15,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONTokener;
 
 import android.content.Context;
+import android.os.Environment;
 
 public class CriminalIntentJSONSerializer {
 
@@ -54,6 +58,31 @@ public class CriminalIntentJSONSerializer {
 		return crimes;
 	}
 	
+	public void saveCrimesToExternalStorage(ArrayList<Crime> crimes)
+		throws JSONException, IOException {
+		//build JSON array
+		JSONArray array = new JSONArray();
+		for (Crime c : crimes)
+			array.put(c.toJSON());
+		
+		//write the file to disk
+		File root = android.os.Environment.getExternalStorageDirectory(); 
+		File dir = new File (root.getAbsolutePath() + "/download");
+	    dir.mkdirs();
+	    File file = new File(dir, mFilename);
+	    Writer writer = null;
+	    
+		try {
+			FileOutputStream f = new FileOutputStream(file);
+			writer = new OutputStreamWriter(f);
+			writer.write(array.toString());
+	        f.close();
+		} finally {
+			if (writer != null)
+				writer.close();
+		}
+	}
+	
 	public void saveCrimes(ArrayList<Crime> crimes) 
 		throws JSONException, IOException {
 		//build JSON array
@@ -72,5 +101,13 @@ public class CriminalIntentJSONSerializer {
 			if (writer != null)
 				writer.close();
 		}
+	}
+	
+	public boolean isExternalStorageWritable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	        return true;
+	    }
+	    return false;
 	}
 }
