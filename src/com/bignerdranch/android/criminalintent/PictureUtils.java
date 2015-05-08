@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
+import android.util.Log;
 import android.view.Display;
 import android.widget.ImageView;
 
@@ -14,6 +15,8 @@ public class PictureUtils {
 	 * to fit the current Window size.
 	 */
 	
+	private static final String TAG = "PictureUtils";
+	
 	@SuppressWarnings("deprecation")
 	public static BitmapDrawable getScaledDrawable(Activity a, String path) {
 		Display display = a.getWindowManager().getDefaultDisplay();
@@ -21,9 +24,16 @@ public class PictureUtils {
 		float destHeight = display.getHeight();
 		
 		//Read orientation of image on disk
-		//try {
-			//ExifInterface exif = new ExifInterface(path);  
-		//}
+		try {
+			ExifInterface exif = new ExifInterface(path);  
+			//int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 
+				//	ExifInterface.ORIENTATION_UNDEFINED);
+			int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 
+					666);
+			Log.i(TAG, "IMG Rotation:" + orientation);
+		} catch (Exception e) {
+			
+		} 
 		
 		
 		// Read in the dimensions of the image on disk
